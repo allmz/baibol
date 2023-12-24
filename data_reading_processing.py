@@ -1,10 +1,21 @@
 import pandas as pd
+import re
+
 import sys
 
 def main(input_file, output_file):
     df = pd.read_csv(input_file)
 
     df.rename(columns={'JSC «Kaspi Bank», BIC CASPKZKA, www.kaspi.kz': 'test'}, inplace=True)
+
+
+    def extract_substring(s):
+        match = re.search(r'\d{2}\.\d{2}\.\d{2} - .*', s)
+        return match.group(0) if match else s
+
+    df['test'] = df['test'].apply(extract_substring)
+
+
 
     column_name = df.columns[0]
 
